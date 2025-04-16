@@ -26,6 +26,17 @@ import { Label } from "@/components/ui/label";
 import { DataTable } from "@/components/dashboard/data-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Complaint } from "@/types";
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  Filter,
+  MessageSquare,
+  Plus,
+} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 
 export default function ComplaintsPage() {
   const { user } = useAuth();
@@ -33,6 +44,8 @@ export default function ComplaintsPage() {
   
   // For new complaint form
   const [newComplaint, setNewComplaint] = useState("");
+  const [complaintCategory, setComplaintCategory] = useState("maintenance");
+  const [complaintPriority, setComplaintPriority] = useState("medium");
   const [isComplaintDialogOpen, setIsComplaintDialogOpen] = useState(false);
   
   // For response form
@@ -40,25 +53,50 @@ export default function ComplaintsPage() {
   const [response, setResponse] = useState("");
   const [status, setStatus] = useState("in-progress");
   const [isResponseDialogOpen, setIsResponseDialogOpen] = useState(false);
+  
+  // For filtering
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
-  // Filter complaints based on user role
-  const filteredComplaints = user?.role === "student"
-    ? complaints.filter(c => c.studentId === user.id)
-    : complaints;
+  // Filter complaints based on user role and filters
+  const getFilteredComplaints = () => {
+    let filtered = user?.role === "student"
+      ? complaints.filter(c => c.studentId === user.id)
+      : complaints;
+    
+    if (statusFilter !== "all") {
+      filtered = filtered.filter(c => c.status === statusFilter);
+    }
+    
+    if (categoryFilter !== "all") {
+      filtered = filtered.filter(c => c.category === categoryFilter);
+    }
+    
+    return filtered;
+  };
+
+  const filteredComplaints = getFilteredComplaints();
 
   const handleSubmitComplaint = () => {
     if (!newComplaint.trim() || !user) return;
     
-    addComplaint({
+    const complaintData = {
       studentId: user.id,
       studentName: user.name,
       message: newComplaint,
+      category: complaintCategory,
+      priority: complaintPriority,
       status: "pending",
       date: new Date().toISOString()
-    });
-
+    };
+    
+    addComplaint(complaintData);
     setNewComplaint("");
+    setComplaintCategory("maintenance");
+    setComplaintPriority("medium");
     setIsComplaintDialogOpen(false);
+    
+    toast.success("Complaint submitted successfully");
   };
 
   const handleSubmitResponse = () => {
@@ -68,13 +106,16 @@ export default function ComplaintsPage() {
       response,
       status: status as "in-progress" | "resolved",
       staffId: user.id,
-      staffName: user.name
+      staffName: user.name,
+      verificationDate: new Date().toISOString()
     });
 
     setResponse("");
     setStatus("in-progress");
     setSelectedComplaint(null);
     setIsResponseDialogOpen(false);
+    
+    toast.success("Response submitted successfully");
   };
 
   // Define columns for the data table based on user role
@@ -85,22 +126,51 @@ export default function ComplaintsPage() {
       cell: ({ row }) => new Date(row.original.date).toLocaleDateString()
     },
     {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }) => (
+        <span className="capitalize">{row.original.category || "General"}</span>
+      )
+    },
+    {
       accessorKey: "message",
       header: "Complaint",
       cell: ({ row }) => (
-        <div className="max-w-[400px] truncate">{row.original.message}</div>
+        <div className="max-w-[300px] truncate">{row.original.message}</div>
+      )
+    },
+    {
+      accessorKey: "priority",
+      header: "Priority",
+      cell: ({ row }) => (
+        <Badge variant={
+          row.original.priority === "high" ? "destructive" :
+          row.original.priority === "medium" ? "default" :
+          "outline"
+        }>
+          {row.original.priority ? row.original.priority.toUpperCase() : "NORMAL"}
+        </Badge>
       )
     },
     {
       accessorKey: "status",
       header: "Status",
       cell: ({ row }) => (
-        <div className={`inline-block px-2 py-1 rounded-full text-xs ${
-          row.original.status === "pending" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-500" : 
-          row.original.status === "in-progress" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500" : 
-          "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500"
-        }`}>
-          {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+        <div className="flex items-center">
+          {row.original.status === "pending" ? (
+            <Clock className="h-4 w-4 mr-1 text-amber-500" />
+          ) : row.original.status === "in-progress" ? (
+            <AlertTriangle className="h-4 w-4 mr-1 text-blue-500" />
+          ) : (
+            <CheckCircle className="h-4 w-4 mr-1 text-green-500" />
+          )}
+          <div className={`inline-block px-2 py-1 rounded-full text-xs ${
+            row.original.status === "pending" ? "bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-500" : 
+            row.original.status === "in-progress" ? "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-500" : 
+            "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-500"
+          }`}>
+            {row.original.status.charAt(0).toUpperCase() + row.original.status.slice(1)}
+          </div>
         </div>
       )
     },
@@ -108,8 +178,19 @@ export default function ComplaintsPage() {
       accessorKey: "response",
       header: "Response",
       cell: ({ row }) => (
-        <div className="max-w-[400px] truncate">
-          {row.original.response || "Awaiting response"}
+        <div>
+          {row.original.response ? (
+            <div className="max-w-[300px] truncate">
+              {row.original.response}
+              {row.original.staffName && (
+                <div className="text-xs text-muted-foreground">
+                  by {row.original.staffName}
+                </div>
+              )}
+            </div>
+          ) : (
+            <span className="text-muted-foreground">Awaiting response</span>
+          )}
         </div>
       )
     }
@@ -126,10 +207,30 @@ export default function ComplaintsPage() {
       header: "Student",
     },
     {
+      accessorKey: "category",
+      header: "Category",
+      cell: ({ row }) => (
+        <span className="capitalize">{row.original.category || "General"}</span>
+      )
+    },
+    {
       accessorKey: "message",
       header: "Complaint",
       cell: ({ row }) => (
         <div className="max-w-[300px] truncate">{row.original.message}</div>
+      )
+    },
+    {
+      accessorKey: "priority",
+      header: "Priority",
+      cell: ({ row }) => (
+        <Badge variant={
+          row.original.priority === "high" ? "destructive" :
+          row.original.priority === "medium" ? "default" :
+          "outline"
+        }>
+          {row.original.priority ? row.original.priority.toUpperCase() : "NORMAL"}
+        </Badge>
       )
     },
     {
@@ -181,10 +282,14 @@ export default function ComplaintsPage() {
               : "View and respond to student complaints"}
           </p>
         </div>
+        
         {user?.role === "student" && (
           <Dialog open={isComplaintDialogOpen} onOpenChange={setIsComplaintDialogOpen}>
             <DialogTrigger asChild>
-              <Button>Submit New Complaint</Button>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Submit New Complaint
+              </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -194,6 +299,39 @@ export default function ComplaintsPage() {
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Select value={complaintCategory} onValueChange={setComplaintCategory}>
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Select category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="maintenance">Maintenance</SelectItem>
+                        <SelectItem value="electrical">Electrical</SelectItem>
+                        <SelectItem value="plumbing">Plumbing</SelectItem>
+                        <SelectItem value="furniture">Furniture</SelectItem>
+                        <SelectItem value="cleaning">Cleaning</SelectItem>
+                        <SelectItem value="internet">Internet</SelectItem>
+                        <SelectItem value="security">Security</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="priority">Priority</Label>
+                    <Select value={complaintPriority} onValueChange={setComplaintPriority}>
+                      <SelectTrigger id="priority">
+                        <SelectValue placeholder="Select priority" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="low">Low</SelectItem>
+                        <SelectItem value="medium">Medium</SelectItem>
+                        <SelectItem value="high">High</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="complaint">Complaint Details</Label>
                   <Textarea
@@ -216,12 +354,74 @@ export default function ComplaintsPage() {
         )}
       </div>
 
-      <DataTable
-        columns={columns}
-        data={filteredComplaints}
-        searchKey="message"
-        placeholder="Search complaints..."
-      />
+      <div className="mb-6">
+        <Tabs defaultValue="all" onValueChange={(value) => setStatusFilter(value === "all" ? "all" : value)}>
+          <div className="flex justify-between items-center">
+            <TabsList>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="pending">Pending</TabsTrigger>
+              <TabsTrigger value="in-progress">In Progress</TabsTrigger>
+              <TabsTrigger value="resolved">Resolved</TabsTrigger>
+            </TabsList>
+            
+            <div className="flex items-center gap-2">
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="w-[180px]">
+                  <Filter className="h-4 w-4 mr-2" />
+                  <SelectValue placeholder="Filter by category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  <SelectItem value="maintenance">Maintenance</SelectItem>
+                  <SelectItem value="electrical">Electrical</SelectItem>
+                  <SelectItem value="plumbing">Plumbing</SelectItem>
+                  <SelectItem value="furniture">Furniture</SelectItem>
+                  <SelectItem value="cleaning">Cleaning</SelectItem>
+                  <SelectItem value="internet">Internet</SelectItem>
+                  <SelectItem value="security">Security</SelectItem>
+                  <SelectItem value="other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          
+          <TabsContent value="all" className="mt-6">
+            <DataTable
+              columns={columns}
+              data={filteredComplaints}
+              searchKey="message"
+              placeholder="Search complaints..."
+            />
+          </TabsContent>
+          
+          <TabsContent value="pending" className="mt-6">
+            <DataTable
+              columns={columns}
+              data={filteredComplaints.filter(c => c.status === "pending")}
+              searchKey="message"
+              placeholder="Search pending complaints..."
+            />
+          </TabsContent>
+          
+          <TabsContent value="in-progress" className="mt-6">
+            <DataTable
+              columns={columns}
+              data={filteredComplaints.filter(c => c.status === "in-progress")}
+              searchKey="message"
+              placeholder="Search in-progress complaints..."
+            />
+          </TabsContent>
+          
+          <TabsContent value="resolved" className="mt-6">
+            <DataTable
+              columns={columns}
+              data={filteredComplaints.filter(c => c.status === "resolved")}
+              searchKey="message"
+              placeholder="Search resolved complaints..."
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
 
       {/* Response Dialog for Staff/Admin */}
       {(user?.role === "staff" || user?.role === "admin") && (
@@ -237,10 +437,23 @@ export default function ComplaintsPage() {
               <div className="space-y-2">
                 <Label>Complaint</Label>
                 <div className="border rounded-md p-3 bg-muted/50">
-                  <p>{selectedComplaint?.message}</p>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    By {selectedComplaint?.studentName} on {selectedComplaint?.date ? new Date(selectedComplaint.date).toLocaleDateString() : ""}
-                  </p>
+                  <div className="flex justify-between">
+                    <p className="font-medium">{selectedComplaint?.studentName}</p>
+                    <Badge variant={
+                      selectedComplaint?.priority === "high" ? "destructive" :
+                      selectedComplaint?.priority === "medium" ? "default" :
+                      "outline"
+                    }>
+                      {selectedComplaint?.priority ? selectedComplaint?.priority.toUpperCase() : "NORMAL"}
+                    </Badge>
+                  </div>
+                  <p className="mt-2">{selectedComplaint?.message}</p>
+                  <div className="flex justify-between mt-2 text-sm text-muted-foreground">
+                    <p>Category: <span className="capitalize">{selectedComplaint?.category || "General"}</span></p>
+                    <p>
+                      {selectedComplaint?.date ? new Date(selectedComplaint.date).toLocaleDateString() : ""}
+                    </p>
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
@@ -256,7 +469,7 @@ export default function ComplaintsPage() {
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
                 <Select value={status} onValueChange={setStatus}>
-                  <SelectTrigger>
+                  <SelectTrigger id="status">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -265,6 +478,17 @@ export default function ComplaintsPage() {
                   </SelectContent>
                 </Select>
               </div>
+              
+              {status === "resolved" && (
+                <div className="space-y-2">
+                  <Label htmlFor="verification">Verification Details</Label>
+                  <Textarea
+                    id="verification"
+                    placeholder="Enter verification details..."
+                    rows={2}
+                  />
+                </div>
+              )}
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsResponseDialogOpen(false)}>

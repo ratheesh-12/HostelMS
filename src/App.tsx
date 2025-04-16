@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,6 +16,12 @@ import ComplaintsPage from "./pages/dashboard/complaints";
 import UsersPage from "./pages/dashboard/users";
 import RoomsPage from "./pages/dashboard/rooms";
 import HostelsPage from "./pages/dashboard/hostels";
+import ProfilePage from "./pages/dashboard/profile";
+import DocumentsPage from "./pages/dashboard/documents";
+import MyRoomPage from "./pages/dashboard/my-room";
+import ReportsPage from "./pages/dashboard/reports";
+import BookingsPage from "./pages/dashboard/bookings";
+import StudentsPage from "./pages/dashboard/students";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -36,6 +43,12 @@ const App = () => (
                 <Route path="/dashboard/users" element={<UsersPage />} />
                 <Route path="/dashboard/rooms" element={<RoomsPage />} />
                 <Route path="/dashboard/hostels" element={<HostelsPage />} />
+                <Route path="/dashboard/profile" element={<ProfilePage />} />
+                <Route path="/dashboard/documents" element={<DocumentsPage />} />
+                <Route path="/dashboard/my-room" element={<MyRoomPage />} />
+                <Route path="/dashboard/reports" element={<ReportsPage />} />
+                <Route path="/dashboard/bookings" element={<BookingsPage />} />
+                <Route path="/dashboard/students" element={<StudentsPage />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>

@@ -43,11 +43,14 @@ export interface Complaint {
   studentId: string;
   studentName: string;
   message: string;
+  category?: string;
+  priority?: 'low' | 'medium' | 'high';
   response?: string;
   status: 'pending' | 'in-progress' | 'resolved';
   staffId?: string;
   staffName?: string;
   date: string;
+  verificationDate?: string;
 }
 
 export interface ActivityLog {
@@ -66,4 +69,16 @@ export interface Notification {
   type: 'info' | 'warning' | 'success' | 'error';
   read: boolean;
   createdAt: string;
+}
+
+export interface Document {
+  id: string;
+  studentId: string;
+  name: string;
+  type: string;
+  fileUrl: string;
+  fileSize: string;
+  uploadDate: string;
+  status: 'pending' | 'approved' | 'rejected';
+  comments?: string;
 }

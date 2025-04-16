@@ -12,7 +12,11 @@ import {
   Settings, 
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  UserCircle,
+  BookOpen,
+  ChartBar,
+  Verified
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/auth-context";
@@ -85,7 +89,7 @@ export function DashboardSidebar() {
         href: "/dashboard/complaints" 
       },
       { 
-        icon: <FileText size={20} />, 
+        icon: <ChartBar size={20} />, 
         label: "Reports", 
         href: "/dashboard/reports" 
       }
@@ -103,9 +107,19 @@ export function DashboardSidebar() {
         href: "/dashboard/rooms" 
       },
       { 
+        icon: <CalendarClock size={20} />, 
+        label: "Bookings", 
+        href: "/dashboard/bookings" 
+      },
+      { 
         icon: <MessageSquare size={20} />, 
         label: "Complaints", 
         href: "/dashboard/complaints" 
+      },
+      { 
+        icon: <Verified size={20} />, 
+        label: "Verification", 
+        href: "/dashboard/documents" 
       }
     ];
 
@@ -127,9 +141,17 @@ export function DashboardSidebar() {
       }
     ];
 
-    if (user?.role === "admin") return [...baseItems, ...adminItems];
-    if (user?.role === "staff") return [...baseItems, ...staffItems];
-    return [...baseItems, ...studentItems];
+    const commonItems = [
+      {
+        icon: <UserCircle size={20} />,
+        label: "Profile",
+        href: "/dashboard/profile"
+      }
+    ];
+
+    if (user?.role === "admin") return [...baseItems, ...adminItems, ...commonItems];
+    if (user?.role === "staff") return [...baseItems, ...staffItems, ...commonItems];
+    return [...baseItems, ...studentItems, ...commonItems];
   };
 
   const navItems = getNavItems();
