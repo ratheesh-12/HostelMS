@@ -61,6 +61,14 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				hostel: {
+					primary: '#4C5FD5',
+					accent: '#FF7A59',
+					'bg-light': '#F5F7FA',
+					'bg-dark': '#1C1F2B',
+					'text-light': '#1A1A1A',
+					'text-dark': '#EDEDED'
 				}
 			},
 			borderRadius: {
