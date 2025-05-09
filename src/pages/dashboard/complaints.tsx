@@ -45,13 +45,13 @@ export default function ComplaintsPage() {
   // For new complaint form
   const [newComplaint, setNewComplaint] = useState("");
   const [complaintCategory, setComplaintCategory] = useState("maintenance");
-  const [complaintPriority, setComplaintPriority] = useState("medium");
+  const [complaintPriority, setComplaintPriority] = useState<"low" | "medium" | "high">("medium");
   const [isComplaintDialogOpen, setIsComplaintDialogOpen] = useState(false);
   
   // For response form
   const [selectedComplaint, setSelectedComplaint] = useState<Complaint | null>(null);
   const [response, setResponse] = useState("");
-  const [status, setStatus] = useState("in-progress");
+  const [status, setStatus] = useState<"pending" | "in-progress" | "resolved">("in-progress");
   const [isResponseDialogOpen, setIsResponseDialogOpen] = useState(false);
   
   // For filtering
@@ -86,7 +86,7 @@ export default function ComplaintsPage() {
       message: newComplaint,
       category: complaintCategory,
       priority: complaintPriority,
-      status: "pending",
+      status: "pending" as "pending" | "in-progress" | "resolved",
       date: new Date().toISOString()
     };
     
@@ -320,7 +320,7 @@ export default function ComplaintsPage() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="priority">Priority</Label>
-                    <Select value={complaintPriority} onValueChange={setComplaintPriority}>
+                    <Select value={complaintPriority} onValueChange={(value) => setComplaintPriority(value as "low" | "medium" | "high")}>
                       <SelectTrigger id="priority">
                         <SelectValue placeholder="Select priority" />
                       </SelectTrigger>
@@ -468,7 +468,7 @@ export default function ComplaintsPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="status">Status</Label>
-                <Select value={status} onValueChange={setStatus}>
+                <Select value={status} onValueChange={(value) => setStatus(value as "in-progress" | "resolved")}>
                   <SelectTrigger id="status">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>

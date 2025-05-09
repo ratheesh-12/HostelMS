@@ -36,7 +36,7 @@ const mockRooms: Room[] = [
     number: "101",
     type: "single",
     status: "available",
-    price: 500,
+    price: 5000,
     hostelId: "h1"
   },
   {
@@ -44,7 +44,7 @@ const mockRooms: Room[] = [
     number: "102",
     type: "double",
     status: "occupied",
-    price: 350,
+    price: 3500,
     hostelId: "h1"
   },
   {
@@ -52,7 +52,7 @@ const mockRooms: Room[] = [
     number: "201",
     type: "single",
     status: "maintenance",
-    price: 480,
+    price: 4800,
     hostelId: "h2"
   },
   {
@@ -60,7 +60,7 @@ const mockRooms: Room[] = [
     number: "202",
     type: "triple",
     status: "available",
-    price: 300,
+    price: 3000,
     hostelId: "h2"
   },
   {
@@ -68,7 +68,7 @@ const mockRooms: Room[] = [
     number: "301",
     type: "quad",
     status: "available",
-    price: 250,
+    price: 2500,
     hostelId: "h3"
   }
 ];
@@ -175,6 +175,7 @@ interface DataContextType {
   updateComplaint: (id: string, complaint: Partial<Complaint>) => void;
   deleteComplaint: (id: string) => void;
   markNotificationAsRead: (id: string) => void;
+  formatPrice: (price: number) => string;
 }
 
 const DataContext = createContext<DataContextType>({
@@ -196,7 +197,8 @@ const DataContext = createContext<DataContextType>({
   addComplaint: () => {},
   updateComplaint: () => {},
   deleteComplaint: () => {},
-  markNotificationAsRead: () => {}
+  markNotificationAsRead: () => {},
+  formatPrice: () => ""
 });
 
 export const useData = () => useContext(DataContext);
@@ -208,6 +210,11 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [complaints, setComplaints] = useState<Complaint[]>(mockComplaints);
   const [activityLogs] = useState<ActivityLog[]>(mockLogs);
   const [notifications, setNotifications] = useState<Notification[]>(mockNotifications);
+
+  // Format price in Rupees
+  const formatPrice = (price: number) => {
+    return `₹${price.toLocaleString('en-IN')}`;
+  };
 
   // Hostel operations
   const addHostel = (hostel: Omit<Hostel, "id">) => {
@@ -305,7 +312,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
         addComplaint,
         updateComplaint,
         deleteComplaint,
-        markNotificationAsRead
+        markNotificationAsRead,
+        formatPrice
       }}
     >
       {children}
