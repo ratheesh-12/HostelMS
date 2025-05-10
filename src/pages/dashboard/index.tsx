@@ -211,7 +211,7 @@ export default function Dashboard() {
                       <div>
                         <p className="text-sm text-muted-foreground">Monthly Fee</p>
                         <p>
-                          ${rooms.find(r => r.id === studentBooking.roomId)?.price || 0}
+                          ₹{rooms.find(r => r.id === studentBooking.roomId)?.price || 0}
                         </p>
                       </div>
                     </div>
