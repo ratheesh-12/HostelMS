@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -307,18 +306,18 @@ export default function LandingPage() {
                   <div className="flex items-start">
                     <MapPinIcon className="h-5 w-5 mr-3 text-hostel-primary" />
                     <div>
-                      <p>123 University Avenue</p>
-                      <p>Campus District, Academic City</p>
-                      <p>Postal Code: 54321</p>
+                      <p>NANDHA ENGINEERING COLLEGE</p>
+                      <p>Perundurai City, Erode District</p>
+                      <p>Postal Code: 638 052</p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <PhoneIcon className="h-5 w-5 mr-3 text-hostel-primary" />
-                    <p>+1 (555) 123-4567</p>
+                    <p>04294 225585, 226393</p>
                   </div>
                   <div className="flex items-center">
                     <MailIcon className="h-5 w-5 mr-3 text-hostel-primary" />
-                    <p>info@hostelms.edu</p>
+                    <p>principal@nandhaengg.org</p>
                   </div>
                 </div>
               </div>
@@ -342,12 +341,17 @@ export default function LandingPage() {
               </div>
               
               <div className="h-72 bg-muted rounded-lg overflow-hidden">
-                {/* Embed a Google Map here in a real implementation */}
-                <div className="w-full h-full flex items-center justify-center bg-muted">
-                  <MapPinIcon className="h-12 w-12 text-muted-foreground" />
-                  <span className="ml-2 text-muted-foreground">Google Map Embed</span>
-                </div>
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3930.371074770406!2d77.6184402!3d11.2860678!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba96d97cfae1069%3A0x7369b4b751e95b88!2sNandha%20Engineering%20College!5e0!3m2!1sen!2sin!4v1715332552073!5m2!1sen!2sin"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
+
             </div>
           </div>
         </div>
@@ -376,11 +380,13 @@ export default function LandingPage() {
             <div>
               <h3 className="font-bold text-lg mb-4">Hostels</h3>
               <ul className="space-y-2">
-                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Sunrise Hostel</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Maple Residence</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Horizon Heights</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Virtual Tour</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Room Types</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">NRI-1</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">NRI-2</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">NRI-3</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">NRI-4</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Akshaya-1</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Akshaya-2</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">Akshaya-3</a></li>
               </ul>
             </div>
             <div>
