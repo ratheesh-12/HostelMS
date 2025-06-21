@@ -7,11 +7,13 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { BedDouble, Calendar, CreditCard, MapPin, Users } from "lucide-react";
 
-const roomImages = [
-  "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1560448205-4d9b3e6bb6db?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-  "https://images.unsplash.com/photo-1513694203232-719a280e022f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-];
+// Static room images
+const roomImages = {
+  single: "/placeholder.svg?height=400&width=600&text=Single+Room",
+  double: "/placeholder.svg?height=400&width=600&text=Double+Room", 
+  triple: "/placeholder.svg?height=400&width=600&text=Triple+Room",
+  quad: "/placeholder.svg?height=400&width=600&text=Quad+Room"
+};
 
 export default function MyRoomPage() {
   const { user } = useAuth();
@@ -33,11 +35,11 @@ export default function MyRoomPage() {
   // Determine room image based on room type
   const getRoomImage = (type?: string) => {
     switch(type) {
-      case "single": return roomImages[0];
-      case "double": return roomImages[1];
-      case "triple":
-      case "quad": return roomImages[2];
-      default: return roomImages[0];
+      case "single": return roomImages.single;
+      case "double": return roomImages.double;
+      case "triple": return roomImages.triple;
+      case "quad": return roomImages.quad;
+      default: return roomImages.single;
     }
   };
 
@@ -75,9 +77,13 @@ export default function MyRoomPage() {
                     Room {roomDetails?.number}
                   </CardTitle>
                   <Badge variant={
-                    studentBooking.status === "approved" ? "success" :
-                    studentBooking.status === "pending" ? "warning" :
+                    studentBooking.status === "approved" ? "default" :
+                    studentBooking.status === "pending" ? "secondary" :
                     "destructive"
+                  } className={
+                    studentBooking.status === "approved" ? "bg-green-500 hover:bg-green-600" :
+                    studentBooking.status === "pending" ? "bg-yellow-500 hover:bg-yellow-600" :
+                    ""
                   }>
                     {studentBooking.status.toUpperCase()}
                   </Badge>
@@ -120,7 +126,7 @@ export default function MyRoomPage() {
                       <CreditCard className="h-5 w-5 mr-2 text-muted-foreground" />
                       <div>
                         <p className="text-sm text-muted-foreground">Monthly Fee</p>
-                        <p className="font-medium">${roomDetails?.price || 0}</p>
+                        <p className="font-medium">₹{roomDetails?.price || 0}</p>
                       </div>
                     </div>
                   </div>
