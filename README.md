@@ -44,6 +44,3 @@ A comprehensive web application for managing hostel operations, including room b
 - Username: student
 - Password: password
 
-## License
-
-MIT
