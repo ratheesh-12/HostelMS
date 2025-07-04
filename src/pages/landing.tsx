@@ -1,35 +1,38 @@
 
-import { Link } from "react-router-dom";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Button } from "@/components/ui/button";
-import {
-  LocateIcon,
-  CalendarCheckIcon,
-  ShieldCheckIcon,
-  WifiIcon,
-  HomeIcon,
-  BookOpenIcon,
-  CoffeeIcon,
-  HeartPulseIcon,
-  ChevronRight,
-  MailIcon,
-  PhoneIcon,
-  MapPinIcon,
-  GithubIcon,
-  TwitterIcon,
-  InstagramIcon,
-  LinkedinIcon
-} from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  BookOpenIcon,
+  CalendarCheckIcon,
+  ChevronRight,
+  CoffeeIcon,
+  FacebookIcon,
+  GithubIcon,
+  GlobeIcon,
+  HeartPulseIcon,
+  HomeIcon,
+  InstagramIcon,
+  LinkedinIcon,
+  LocateIcon,
+  MailIcon,
+  MapPinIcon,
+  PhoneIcon,
+  ShieldCheckIcon,
+  TwitterIcon,
+  MessageCircleIcon,
+  WifiIcon
+} from "lucide-react";
+import { Link } from "react-router-dom";
 
 const features = [
   {
@@ -71,6 +74,21 @@ const features = [
     icon: <HeartPulseIcon className="h-10 w-10 text-hostel-accent" />,
     title: "Health Services",
     description: "First-aid facilities with quick access to medical assistance."
+  },
+  {
+    icon: <GlobeIcon className="h-10 w-10 text-hostel-accent" />, // Changed from LocateIcon to GlobeIcon
+    title: "Prime Location",
+    description: "Located near campus with easy access to all academic buildings and amenities."
+  },
+  {
+    icon: <MessageCircleIcon className="h-10 w-10 text-hostel-accent" />,
+    title: "WhatsApp Chat",
+    description:  "Contact us instantly via WhatsApp for support and inquiries."
+  },
+  {
+    icon: <FacebookIcon className="h-10 w-10 text-hostel-accent" />,
+    title: "Social Spaces",
+    description: "Common areas designed for relaxation and social interaction."
   }
 ];
 
@@ -307,18 +325,23 @@ export default function LandingPage() {
                   <div className="flex items-start">
                     <MapPinIcon className="h-5 w-5 mr-3 text-hostel-primary" />
                     <div>
-                      <p>123 University Avenue</p>
-                      <p>Campus District, Academic City</p>
-                      <p>Postal Code: 54321</p>
+                      <p>Nandha Engineering College</p>
+                      <p>Erode Perundurai Main Road,</p>
+                      <p>Vaikkaalmedu,</p>
+                      <p>Erode-638052</p>
                     </div>
                   </div>
                   <div className="flex items-center">
                     <PhoneIcon className="h-5 w-5 mr-3 text-hostel-primary" />
-                    <p>+1 (555) 123-4567</p>
+                    <p>04294 225 585</p>
                   </div>
                   <div className="flex items-center">
                     <MailIcon className="h-5 w-5 mr-3 text-hostel-primary" />
-                    <p>info@hostelms.edu</p>
+                    <p>info@nandhaengg.org</p>
+                  </div>
+                  <div className="flex items-center">
+                    <GlobeIcon className="h-5 w-5 mr-3 text-hostel-primary" />
+                    <a href="https://nandhaengg.org/" target="_blank">nandhaengg.org</a>
                   </div>
                 </div>
               </div>
@@ -326,27 +349,31 @@ export default function LandingPage() {
               <div>
                 <h3 className="text-xl font-semibold mb-4">Connect With Us</h3>
                 <div className="flex space-x-4">
-                  <a href="#" className="hover:text-hostel-primary transition-colors">
-                    <TwitterIcon className="h-6 w-6" />
+                  <a href="https://www.facebook.com/nandhaengg.org/" target="_blank" className="hover:text-hostel-primary transition-colors">
+                    <FacebookIcon className="h-6 w-6" />
                   </a>
-                  <a href="#" className="hover:text-hostel-primary transition-colors">
+                  <a href="https://www.instagram.com/nandhaengineeringcollege/" target="_blank" className="hover:text-hostel-primary transition-colors">
                     <InstagramIcon className="h-6 w-6" />
                   </a>
-                  <a href="#" className="hover:text-hostel-primary transition-colors">
+                  <a href="https://www.linkedin.com/posts/nandha-engineering-college-autonomous-bb79562b5_life-nec-lifeeducation-activity-7263416326931587072-knve/" 
+                     target="_blank" className="hover:text-hostel-primary transition-colors">
                     <LinkedinIcon className="h-6 w-6" />
                   </a>
-                  <a href="#" className="hover:text-hostel-primary transition-colors">
-                    <GithubIcon className="h-6 w-6" />
-                  </a>
+                  
                 </div>
               </div>
               
               <div className="h-72 bg-muted rounded-lg overflow-hidden">
-                {/* Embed a Google Map here in a real implementation */}
-                <div className="w-full h-full flex items-center justify-center bg-muted">
-                  <MapPinIcon className="h-12 w-12 text-muted-foreground" />
-                  <span className="ml-2 text-muted-foreground">Google Map Embed</span>
-                </div>
+                <iframe
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                  src="https://www.google.com/maps?q=11.2860707,77.6210174&z=15&output=embed"
+                  title="Hostel Location"
+                ></iframe>
               </div>
             </div>
           </div>
@@ -396,18 +423,31 @@ export default function LandingPage() {
           </div>
           <div className="border-t mt-12 pt-6 flex flex-col md:flex-row justify-between items-center">
             <p className="text-sm text-muted-foreground mb-4 md:mb-0">
-              © 2023 HostelMS. All rights reserved.
+              © 2025 HostelMS. All rights reserved.
             </p>
+            <div className="flex space-x-4 mb-4 md:mb-0">
+              <a href="https://github.com/ratheesh-12/HostelMS" target="_blank" className="text-muted-foreground hover:text-hostel-primary transition-colors">
+                <GithubIcon className="h-5 w-5" />
+              </a>
+              <a href="https://github.com/ratheesh-12/HostelMS" target="_blank" className="text-sm text-muted-foreground mb-4 md:mb-0">
+                Developed by Ratheesh Sekar
+              </a>
+            </div>  
             <div className="flex space-x-4">
-              <a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">
-                <TwitterIcon className="h-5 w-5" />
+              <a href="https://wa.me/918098501226"
+                 target="_blanlk"
+                //  rel="noopener noreferrer"
+                //  aria-label="Chat on WhatsApp"
+                 className="text-muted-foreground hover:text-hostel-primary transition-colors">
+                 <MessageCircleIcon className="h-5 w-5" />
               </a>
-              <a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">
-                <InstagramIcon className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-muted-foreground hover:text-hostel-primary transition-colors">
+              <a href="https://www.linkedin.com/in/ratheeshsekar12/" target="_blank" className="text-muted-foreground hover:text-hostel-primary transition-colors">
                 <LinkedinIcon className="h-5 w-5" />
               </a>
+              <a href="https://github.com/ratheesh-12" target="_blank" className="text-muted-foreground hover:text-hostel-primary transition-colors">
+                <GithubIcon className="h-5 w-5" />
+              </a>
+              
             </div>
           </div>
         </div>
